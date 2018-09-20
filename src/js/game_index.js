@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import GameInitialzie from './components/game_initialize';
+import Grid from './components/grid';
 import { Layout, Menu, Breadcrumb, Row, Col, Slider  } from 'antd';
 const { Header, Content, Footer  } = Layout;
 
@@ -10,8 +11,13 @@ export default class GameIndex extends React.Component {
     constructor() {
         super();
         this.state = {
-            text: undefined
+            word: undefined
         }
+    }
+    shaffleWord(word) {
+        this.setState({
+            word: _.shuffle(word.concat(word))
+        })
     }
 render() {
 return (
@@ -37,7 +43,7 @@ return (
             <Breadcrumb.Item>App</Breadcrumb.Item>
           </Breadcrumb>
           <div style={{ background: '#fff', padding: 24, minHeight: 380  }}>
-            <GameInitialzie />
+            this.state.word ? <GameStart word={this.state.word} /> : <GameInitialize wordEntered={this.shaffleWord}/>
           </div>
         </Content>
         <Footer style={{ textAlign: 'center'  }}>

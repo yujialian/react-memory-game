@@ -1,78 +1,34 @@
 import React from 'react';
-import { Row, Col, Slider } from 'antd';
+import { render } from 'react-dom';
+import Flipcard from '@kennethormandy/react-flipcard';
+import '@kennethormandy/react-flipcard/dist/Flipcard.css';
+import './grid.css';
+
+
+// Import minimal required styles however you’d like
+import '@kennethormandy/react-flipcard/dist/Flipcard.css'
 
 export default class Grid extends React.Component {
-  gutters = {};
-
-  colCounts = {};
-
   constructor() {
-    super();
+    super()
+
     this.state = {
-      gutterKey: 1,
-      colCountKey: 2,
-    };
-    [8, 16, 24, 32, 40, 48].forEach((value, i) => { this.gutters[i] = value; });
-    [2, 3, 4, 6, 8, 12].forEach((value, i) => { this.colCounts[i] = value; });
-  }
-
-  onGutterChange = (gutterKey) => {
-    this.setState({ gutterKey });
-  }
-
-  onColCountChange = (colCountKey) => {
-    this.setState({ colCountKey });
+      flipped: false,
+    }
   }
 
   render() {
-    const { gutterKey, colCountKey } = this.state;
-    const cols = [];
-    const colCount = this.colCounts[colCountKey];
-    let colCode = '';
-    for (let i = 0; i < colCount; i++) {
-      cols.push(
-        <Col key={i.toString()} span={24 / colCount}>
-          <div>Column</div>
-        </Col>
-      );
-      colCode += `  <Col span={${24 / colCount}} />\n`;
-    }
     return (
-      <div>
-        <div style={{ marginBottom: 16 }}>
-          <span style={{ marginRight: 6 }}>Gutter (px): </span>
-          <div style={{ width: '50%' }}>
-            <Slider
-              min={0}
-              max={Object.keys(this.gutters).length - 1}
-              value={gutterKey}
-              onChange={this.onGutterChange}
-              marks={this.gutters}
-              step={null}
-            />
-          </div>
-          <span style={{ marginRight: 6 }}>Column Count:</span>
-          <div style={{ width: '50%' }}>
-            <Slider
-              min={0}
-              max={Object.keys(this.colCounts).length - 1}
-              value={colCountKey}
-              onChange={this.onColCountChange}
-              marks={this.colCounts}
-              step={null}
-            />
-          </div>
-        </div>
-        <Row gutter={this.gutters[gutterKey]}>{cols}</Row>
-        {
-            for(let i = 0; i < colCount; i++) {
-                <Col key={i.toString()} span={24 / colCount}>
-                    <div>Column</div>
-                    </Col>
-            }
-        }
+      <div className="charCard">
+		<Flipcard flipped={this.state.flipped} onClick={e => this.setState({ flipped: !this.state.flipped })}>
+   			<div className='front'>
+      			<h2>GUESS</h2>
+   			</div>
+   			<div className='front'>
+      			<h2>2</h2>
+    		</div>
+	</Flipcard>
       </div>
     );
   };
 }
-
