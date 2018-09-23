@@ -4,18 +4,25 @@ import _ from 'lodash';
 import './game_start.css'
 
 export default class GameStart extends React.Component {
-constructor(props) {
-    super(props)
-}
+    constructor(props) {
+        super(props)
+    }
 
     render() {
-        const { words } = this.props;
+        const { cardsInfo, selectedCouple, selectedCard} = this.props;
         return (
             <div className='gameBoard'>
             {
-                words.map((word, index) => {
+                cardsInfo.map((cardInfo, index) => {
+                    const comparing = selectedCouple.indexOf(cardInfo) > -1
                     return (
-                        <Grid word={word} key= {index} flip = {false} />
+                        <Grid
+                            word={cardInfo.character}
+                            isComparing = {comparing}
+                            key= {index}
+                            selectedCard={()=>selectedCard(cardInfo)}
+                            guessed={cardInfo.guessed}
+                        />
                     )
                 })
             }

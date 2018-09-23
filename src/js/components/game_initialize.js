@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "antd/dist/antd.css";
+import _ from 'lodash';
 import { Form, Icon, Input, Button } from "antd";
 const FormItem = Form.Item;
 
@@ -17,9 +18,6 @@ class GameInitial extends React.Component {
 		super(props);
 		this.state = {
 			word: 'hello',
-            cardsInfo : [],
-            selectedCards: [],
-            comparing: false
 		}
 	}
 
@@ -27,28 +25,12 @@ class GameInitial extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-		  var shaffledWord = [...values.word.concat(values.word)]
-          shaffledWord = _.shuffle(_.map(shaffledWord, function(word) {
-              return {
-                  character: word,
-                  guessed: false
-              }
-          }));
+          this.props.wordEntered(values.word);
       }
     });
   }
 
-    cardSelection = e => {
-        if(this.state.comparing || this.state.selectedCards.indexOf(e) > -1 || card.guessed) {
-            return;
-        }
-        const selectedCards = [...this.state.seletedCards, e];
-        this.setState({
-            selectedCards
-        });
-        if(this.state.selectedCards.length == 1) {
-        }
-    }
+
   render() {
 	const formItemLayout = {
       labelCol: { span: 4 },

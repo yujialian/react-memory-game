@@ -4,31 +4,85 @@ import _ from 'lodash';
 import GameInitial from './components/game_initialize';
 import GameStart from './components/game_start';
 import { Layout, Menu, Breadcrumb, Row, Col, Slider  } from 'antd';
-const { Header, Content, Footer  } = Layout;
-
+const { Header, Content, Footer } = Layout;
 
 export default class GameIndex extends React.Component {
     propTypes: {
              onWordsEntered: React.PropTypes.func.isRequired
     }
-    constructor() {
-        super();
+	constructor() {
+		super();
         this.state = {
+            cardsInfo : [],
+            selectedCouple: [],
+            isComparing: false,
             word: undefined
         }
-		this.shaffleWord = this.shaffleWord.bind(this);
+		this.setWord = this.setWord.bind(this);
 	}
-	shaffleWord(word){
-		var shuffledWord = [];
-		word = word.concat(word).split('');
-		while (word.length > 0) {
-			shuffledWord.push(word.splice(word.length * Math.random() << 0, 1));
-		}
+
+	setWord(word) {
+		this.setState({word: word}, ()=>{ this.gameStartOrRestart() })
+	}
+
+	gameStartOrRestart() {
+		let word = this.state.word.concat(this.state.word);
+		var shaffledWord = [...word]
+		shaffledWord = _.shuffle(_.map(shaffledWord, function(word) {
+			return {
+				character: word,
+				guessed: false
+			}
+		}));
 		this.setState({
-			word: shuffledWord
-		});
+			cardsInfo: shaffledWord,
+			selectedCouple: [],
+			isComparing: false
+		})
 	}
+
+    selectedCard(card) {
+        if(this.state.isComparing || this.state.selectedCouple && this.state.selectedCouple.indexOf(card) > -1 || card.guessed) return;
+        const selectedCouple = [...this.state.selectedCouple, card];
+        console.log("cards:", card);
+        console.log("selected:", selectedCouple);
+        this.setState({ selectedCouple: selectedCouple });
+        if(this.state.selectedCouple.length == 1) this.compareCouple(selectedCouple);
+        //console.log("compare couple:", this.state.selectedCouple);
+    }
+    compareCouple(selectedCouple) {
+        this.setState({
+            isComparing: true
+        })
+
+        setTimeout(() => {
+            const [firstCard, secondCard] = selectedCouple;
+            let cardsInfo = this.state.cardsInfo;
+            if(firstCard.character === secondCard.character) {
+                cardsInfo =_.map(this.state.cardsInfo, function(cardInfo) {
+                    if(cardInfo.character != firstCard.character) {
+                        return cardInfo
+                    }
+                    return {...cardInfo, guessed: true}
+                })
+            }
+            console.log("before:", this.state.selectedCouple);
+            this.win(cardsInfo);
+            this.setState({
+                cardsInfo,
+                selectedCouple: [],
+                isComparing: false
+            })
+            console.log("after:", this.state.selectedCouple);
+        }, 1000);
+    }
+
+	win(cardsInfo) {
+		if(_.filter(cardsInfo, {guessed: false}).length == 0) alert("win!");
+	}
+
 render() {
+    console.log("cardsInfo:", this.state.cardsInfo);
 return (
     <Layout style={{height: "100vh"}}>
         <Header style={{ position: 'fixed', zIndex: 1, width: '100%'  }}>
@@ -52,10 +106,10 @@ return (
             <Breadcrumb.Item>App</Breadcrumb.Item>
           </Breadcrumb>
           <div style={{ background: '#fff', padding: 24, minHeight: 380  }}>
-    {this.state.word ? <GameStart words={this.state.word} /> : <GameInitial wordEntered={this.shaffleWord} />}
+    {this.state.word ? <GameStart selectedCard={(card) => this.selectedCard(card)} cardsInfo={this.state.cardsInfo} selectedCouple={this.state.selectedCouple} /> : <GameInitial wordEntered={this.setWord} />}
     </div>
     </Content>
-    <Footer style={{ textAlign: 'center'  }}>
+    <Footer style={{ textAlign: 'center' }}>
     Ant Design   2018 Created by Ant UED
     </Footer>
     </Layout>);
