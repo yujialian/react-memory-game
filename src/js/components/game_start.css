@@ -1,8 +1,14 @@
 .gameBoard {
     display: flex;
     flex-wrap: wrap;
-    width: 700px;
-    height: 600px;
+    min-height: 10px;
     margin: 0 auto; 
     justify-content: space-around;
+}
+.gameBoard > div.charCard {
+    min-height: 150px;
+    float: left;
+    background:pink;
+    position: center;
+    margin-right: calc((100% - 300px) / 5 - 1px);
 }
