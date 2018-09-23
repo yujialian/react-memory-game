@@ -14,7 +14,7 @@ export default class GameIndex extends React.Component {
 		super();
         this.state = {
             cardsInfo : [],
-            selectedCouple: [],
+            selectedIndex: [],
             isComparing: false,
             word: undefined
         }
@@ -36,44 +36,40 @@ export default class GameIndex extends React.Component {
 		}));
 		this.setState({
 			cardsInfo: shaffledWord,
-			selectedCouple: [],
+			selectedIndex: [],
 			isComparing: false
 		})
 	}
 
-    selectedCard(card) {
-        if(this.state.isComparing || this.state.selectedCouple && this.state.selectedCouple.indexOf(card) > -1 || card.guessed) return;
-        const selectedCouple = [...this.state.selectedCouple, card];
-        console.log("cards:", card);
-        console.log("selected:", selectedCouple);
-        this.setState({ selectedCouple: selectedCouple });
-        if(this.state.selectedCouple.length == 1) this.compareCouple(selectedCouple);
-        //console.log("compare couple:", this.state.selectedCouple);
+    selectedCard(index) {
+        if(this.state.isComparing || this.state.selectedIndex && this.state.selectedIndex.indexOf(index) > -1 || this.state.cardsInfo[index].guessed) return;
+        const selectedIndex = [...this.state.selectedIndex, index];
+        this.setState({ selectedIndex: selectedIndex }, () => {
+            if(this.state.selectedIndex.length == 2) this.compareIndex(selectedIndex);
+        });
     }
-    compareCouple(selectedCouple) {
+    compareIndex(selectedIndex) {
         this.setState({
             isComparing: true
         })
 
         setTimeout(() => {
-            const [firstCard, secondCard] = selectedCouple;
+            const [firstCard, secondCard] = selectedIndex;
             let cardsInfo = this.state.cardsInfo;
-            if(firstCard.character === secondCard.character) {
-                cardsInfo =_.map(this.state.cardsInfo, function(cardInfo) {
-                    if(cardInfo.character != firstCard.character) {
+            if(this.state.cardsInfo[firstCard].character === this.state.cardsInfo[secondCard].character) {
+                cardsInfo =_.map(this.state.cardsInfo, function(cardInfo, index) {
+                    if(index != firstCard && index != secondCard) {
                         return cardInfo
                     }
                     return {...cardInfo, guessed: true}
                 })
             }
-            console.log("before:", this.state.selectedCouple);
             this.win(cardsInfo);
             this.setState({
                 cardsInfo,
-                selectedCouple: [],
+                selectedIndex: [],
                 isComparing: false
             })
-            console.log("after:", this.state.selectedCouple);
         }, 1000);
     }
 
@@ -106,7 +102,7 @@ return (
             <Breadcrumb.Item>App</Breadcrumb.Item>
           </Breadcrumb>
           <div style={{ background: '#fff', padding: 24, minHeight: 380  }}>
-    {this.state.word ? <GameStart selectedCard={(card) => this.selectedCard(card)} cardsInfo={this.state.cardsInfo} selectedCouple={this.state.selectedCouple} /> : <GameInitial wordEntered={this.setWord} />}
+    {this.state.word ? <GameStart selectedCard={(card, index) => this.selectedCard(card, index)} cardsInfo={this.state.cardsInfo} selectedIndex={this.state.selectedIndex} /> : <GameInitial wordEntered={this.setWord} />}
     </div>
     </Content>
     <Footer style={{ textAlign: 'center' }}>

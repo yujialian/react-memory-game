@@ -9,18 +9,18 @@ export default class GameStart extends React.Component {
     }
 
     render() {
-        const { cardsInfo, selectedCouple, selectedCard} = this.props;
+        const { cardsInfo, selectedIndex, selectedCard} = this.props;
         return (
             <div className='gameBoard'>
             {
                 cardsInfo.map((cardInfo, index) => {
-                    const comparing = selectedCouple.indexOf(cardInfo) > -1
+                    const comparing = selectedIndex.indexOf(index) > -1
                     return (
                         <Grid
                             word={cardInfo.character}
                             isComparing = {comparing}
                             key= {index}
-                            selectedCard={()=>selectedCard(cardInfo)}
+                            selectedCard={()=>selectedCard(index)}
                             guessed={cardInfo.guessed}
                         />
                     )
