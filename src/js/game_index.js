@@ -29,13 +29,12 @@ export default class GameIndex extends React.Component {
 	}
 
 	setStatus = (word, userName) => {
-        console.log("user name", userName)
-		this.setState({word: word, userName: userName}, ()=>{ this.gameStartOrRestart() })
+		this.setState({word: word, userName: userName}, ()=>{ this.gameRestart() })
 	}
 
     backMainBoard = () => {
-        console.log("here we go");
-        this.setState(getInitialState());
+        this.gameRestart();
+        this.setState({cardInfo : [], word: undefined, userName: undefined});
     }
 
     handleItemClick = (e) => {
@@ -48,7 +47,7 @@ export default class GameIndex extends React.Component {
         }
     }
 
-	gameStartOrRestart = () => {
+	gameRestart = () => {
 		let word = this.state.word.concat(this.state.word);
 		var shaffledWord = [...word]
 		shaffledWord = _.shuffle(_.map(shaffledWord, function(word) {
@@ -61,7 +60,8 @@ export default class GameIndex extends React.Component {
 			cardsInfo: shaffledWord,
 			selectedIndex: [],
 			isComparing: false,
-            selectScoreBoard: false
+            selectScoreBoard: false,
+            score: 0
 		})
 	}
 
@@ -120,7 +120,7 @@ export default class GameIndex extends React.Component {
             } else {
                 this.setState({ usersList: [...this.state.usersList, {userName: this.state.userName, score: this.state.score}] })
             }
-            this.gameStartOrRestart();
+            this.gameRestart();
         }
 	}
 
@@ -143,7 +143,7 @@ return (
         <Content style={{ padding: '0 50px', marginTop: 64  }}>
         {
            this.state.word && !this.state.selectScoreBoard ?
-            (<div className = "GameButton"><Button type="primary" style={{ float: 'left', margin: '20px' }} icon="poweroff" onClick={this.gameStartOrRestart}>
+            (<div className = "GameButton"><Button type="primary" style={{ float: 'left', margin: '20px' }} icon="poweroff" onClick={this.gameRestart}>
                Restart
             </Button>
           <Button type="primary" style={{ float: 'left', margin: '20px' }} onClick={() => this.backMainBoard()}>Back to main board</Button>

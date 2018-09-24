@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { List, Avatar } from 'antd';
+import _ from 'lodash';
 
 export default class ScoreBoard extends React.Component {
     constructor(props) {
@@ -8,10 +9,11 @@ export default class ScoreBoard extends React.Component {
     }
 	render() {
     const {usersList} = this.props;
+    let sortedUsersList = _.reverse(_.sortBy(usersList, 'score'));
 	return (
   		<List
     		itemLayout="horizontal"
-            dataSource={usersList}
+            dataSource={sortedUsersList}
     		renderItem={item => (
 
       		<List.Item>

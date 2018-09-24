@@ -16,7 +16,7 @@ export default class Grid extends React.Component {
       <div className="charCard" onClick={selectedCard}>
 		<Flipcard flipped={isComparing || guessed}>
    			<div className='front'>
-      			<h2>GUESS</h2>
+      			<img className="front-img" style={{ width: 125, height: 125 }} src={require("./img/illumio.png")} alt="Guess" />
    			</div>
    			<div className='back'>
       			<h2>{word}</h2>
