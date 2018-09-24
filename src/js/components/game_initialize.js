@@ -25,7 +25,7 @@ class GameInitial extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-          this.props.wordEntered(values.word);
+          this.props.wordEntered(values.word, values.player_name);
       }
     });
   }
@@ -42,6 +42,15 @@ class GameInitial extends React.Component {
     const { getFieldDecorator, getFieldsError } = this.props.form;
     return (
       <Form layout="horizontal" onSubmit={this.handleSubmit}>
+        <FormItem
+		{...formItemLayout}
+		>
+          {getFieldDecorator("player_name", {
+            rules: [
+              { required: true, message: "Player name is required!" },
+            ],
+          })(<Input placeholder="Your name" />)}
+        </FormItem>
         <FormItem
 		{...formItemLayout}
 		>

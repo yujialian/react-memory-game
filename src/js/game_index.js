@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import GameInitial from './components/game_initialize';
 import GameStart from './components/game_start';
-import { Layout, Menu, Breadcrumb, Row, Col, Slider  } from 'antd';
+import { Layout, Menu, Breadcrumb, Row, Col, Slider, Button  } from 'antd';
 const { Header, Content, Footer } = Layout;
 
 export default class GameIndex extends React.Component {
@@ -14,15 +14,17 @@ export default class GameIndex extends React.Component {
 		super();
         this.state = {
             cardsInfo : [],
+            userName: undefined,
             selectedIndex: [],
             isComparing: false,
             word: undefined
         }
-		this.setWord = this.setWord.bind(this);
+		this.setStatus = this.setStatus.bind(this);
+        this.gameStartOrRestart = this.gameStartOrRestart.bind(this);
 	}
 
-	setWord(word) {
-		this.setState({word: word}, ()=>{ this.gameStartOrRestart() })
+	setStatus(word, userName) {
+		this.setState({word: word, userName: userName}, ()=>{ this.gameStartOrRestart() })
 	}
 
 	gameStartOrRestart() {
@@ -90,19 +92,18 @@ return (
             style={{ lineHeight: '64px'  }}
           >
             <Menu.Item key="0">Allumio Game Center</Menu.Item>
-            <Menu.Item key="1">Single Mode</Menu.Item>
-            <Menu.Item key="2">Multiple Mode</Menu.Item>
-            <Menu.Item key="3">Score board</Menu.Item>
+            <Menu.Item key="1">Gaming</Menu.Item>
+            <Menu.Item key="2">Score board</Menu.Item>
           </Menu>
         </Header>
         <Content style={{ padding: '0 50px', marginTop: 64  }}>
-          <Breadcrumb style={{ margin: '16px 0'  }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
+        {
+           this.state.word ? <Button type="primary" style={{ margin: '10px' }} icon="poweroff" onClick={this.gameStartOrRestart}>
+                Restart
+            </Button> : null
+        }
           <div style={{ background: '#fff', padding: 24, minHeight: 380  }}>
-    {this.state.word ? <GameStart selectedCard={(card, index) => this.selectedCard(card, index)} cardsInfo={this.state.cardsInfo} selectedIndex={this.state.selectedIndex} /> : <GameInitial wordEntered={this.setWord} />}
+    {this.state.word ? <GameStart selectedCard={(card, index) => this.selectedCard(card, index)} cardsInfo={this.state.cardsInfo} selectedIndex={this.state.selectedIndex} /> : <GameInitial wordEntered={this.setStatus} />}
     </div>
     </Content>
     <Footer style={{ textAlign: 'center' }}>
