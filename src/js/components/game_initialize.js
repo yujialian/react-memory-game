@@ -57,7 +57,7 @@ class GameInitial extends React.Component {
           {getFieldDecorator("word", {
             rules: [
               { required: true },
-              { min: 3, message: "The word length at least 3!" }
+              { min: 1, message: "The word length at least 3!" }
             ],
             initialValue: this.state.word
           })(<Input placeholder="Word you want to guess!" />)}

@@ -2,7 +2,8 @@
     display: flex;
     flex-wrap: wrap;
     min-height: 10px;
-    margin: 0 auto; 
+    margin: 0px auto;
+    margin-top: 50px;
     justify-content: space-around;
 }
 .gameBoard > div.charCard {
