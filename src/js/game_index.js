@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import GameInitial from './components/game_initialize';
 import GameStart from './components/game_start';
-import { Layout, Menu, Breadcrumb, Row, Col, Slider, Button  } from 'antd';
+import ScoreBoard from './components/score_board';
+import { Layout, Menu, Breadcrumb, Row, Col, Slider, Button, message } from 'antd';
 const { Header, Content, Footer } = Layout;
 
 export default class GameIndex extends React.Component {
@@ -17,15 +18,25 @@ export default class GameIndex extends React.Component {
             userName: undefined,
             selectedIndex: [],
             isComparing: false,
-            word: undefined
+            word: undefined,
+            selectScoreBoard: false
         }
 		this.setStatus = this.setStatus.bind(this);
         this.gameStartOrRestart = this.gameStartOrRestart.bind(this);
+        this.handleItemClick = this.handleItemClick.bind(this);
 	}
 
 	setStatus(word, userName) {
 		this.setState({word: word, userName: userName}, ()=>{ this.gameStartOrRestart() })
 	}
+
+    handleItemClick(e) {
+        if(e.key === '2') {
+            this.setState({ selectScoreBoard: true });
+        } else {
+            this.setState({ selectScoreBoard: false });
+        }
+    }
 
 	gameStartOrRestart() {
 		let word = this.state.word.concat(this.state.word);
@@ -88,7 +99,9 @@ return (
           <Menu
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={['0']}
+
+            defaultSelectedKeys={ this.state.word ? ['1'] : ['0'] }
+            onClick = {this.handleItemClick}
             style={{ lineHeight: '64px'  }}
           >
             <Menu.Item key="0">Allumio Game Center</Menu.Item>
@@ -98,12 +111,16 @@ return (
         </Header>
         <Content style={{ padding: '0 50px', marginTop: 64  }}>
         {
-           this.state.word ? <Button type="primary" style={{ margin: '10px' }} icon="poweroff" onClick={this.gameStartOrRestart}>
+           this.state.word ? <Button type="primary" style={{ float: 'left', margin: '10px' }} icon="poweroff" onClick={this.gameStartOrRestart}>
                 Restart
             </Button> : null
         }
+    {
+          this.state.userName ? <Button type="primary" style={{ float: 'right', margin: '10px' }} onClick={() => message.info('Enjoy the game!')}>Welcome! {this.state.userName}</Button> : null
+
+    }
           <div style={{ background: '#fff', padding: 24, minHeight: 380  }}>
-    {this.state.word ? <GameStart selectedCard={(card, index) => this.selectedCard(card, index)} cardsInfo={this.state.cardsInfo} selectedIndex={this.state.selectedIndex} /> : <GameInitial wordEntered={this.setStatus} />}
+    {this.state.selectScoreBoard ? <ScoreBoard /> : this.state.word ? <GameStart selectedCard={(card, index) => this.selectedCard(card, index)} cardsInfo={this.state.cardsInfo} selectedIndex={this.state.selectedIndex} /> : <GameInitial wordEntered={this.setStatus} />}
     </div>
     </Content>
     <Footer style={{ textAlign: 'center' }}>
