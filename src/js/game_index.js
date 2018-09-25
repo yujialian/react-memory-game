@@ -7,13 +7,9 @@ import ScoreBoard from './components/score_board';
 import {
   Layout,
   Menu,
-  Breadcrumb,
-  Row,
-  Col,
-  Slider,
   Button,
   message,
-  Modal
+  Alert
 } from 'antd';
 const {Header, Content, Footer} = Layout;
 
@@ -26,13 +22,12 @@ const getInitialState = () => {
     isComparing: false,
     word: undefined,
     selectScoreBoard: false,
-    score: 0
+    score: 0,
+    winningNotification: false
   }
 }
 export default class GameIndex extends React.Component {
-  propTypes: {
-    onWordsEntered: React.PropTypes.func.isRequired
-  }
+
   constructor() {
     super();
     this.state = getInitialState();
@@ -48,15 +43,15 @@ export default class GameIndex extends React.Component {
   }
 
   backMainBoard = () => {
-    this.gameRestart();
-    this.setState({cardInfo: [], word: undefined, userName: undefined});
+    console.log("here!");
+    this.setState({word: undefined, userName: undefined, selectScoreBoard: false});
   }
 
   handleItemClick = (e) => {
     if (e.key === '0' && this.state.word) {
       this.setState({selectScoreBoard: false});
     } else if (e.key === '0') {
-      this.setState(getInitialState());
+      this.backMainBoard();
     } else {
       this.setState({selectScoreBoard: true});
     }
@@ -117,24 +112,14 @@ export default class GameIndex extends React.Component {
 
   win(cardsInfo) {
     if (_.filter(cardsInfo, {guessed: false}).length == 0) {
-      this.setState({
-        usersList: [
-          ...this.state.usersList, {}
-        ]
-      })
-      let usersList = this.state.usersList
       let userName = this.state.userName;
+      let currentScore = this.state.score
       let found = false
       /* If user name already present in user list, update the score if current score is higher. */
-      usersList = _.map(this.state.usersList, function(userInfo, index) {
+      let usersList = _.map(this.state.usersList, function(userInfo, index) {
         if (userInfo.userName === userName) {
           found = true
-          return {
-            ...userInfo,
-            score: userInfo.score > this.state.score
-              ? userInfo.score
-              : this.state.score
-          }
+          return userInfo.score < currentScore ? {...userInfo, score: currentScore} : userInfo
         } else {
           return userInfo
         }
@@ -151,6 +136,10 @@ export default class GameIndex extends React.Component {
           ]
         })
       }
+      this.setState({winningNotification: true})
+      setTimeout(() => {
+          this.setState({winningNotification: false})
+      }, 1000)
       this.gameRestart();
     }
   }
@@ -195,6 +184,13 @@ export default class GameIndex extends React.Component {
                 }} onClick={() => message.info('Enjoy the game!')}>Welcome! {this.state.userName}</Button>
             </div>)
             : null
+        }
+        {
+            this.state.winningNotification ? <Alert
+              message="You win!"
+              description={"Congradulations!"}
+             type="success"
+            />: null
         }
         <div style={{
             background: '#fff',

@@ -1,7 +1,7 @@
 import React from 'react';
 import Grid from './grid';
 import _ from 'lodash';
-import './game_start.css'
+import './css/game_start.css'
 
 export default class GameStart extends React.Component {
   constructor(props) {

@@ -5,14 +5,11 @@ import _ from 'lodash';
 import {Form, Icon, Input, Button} from "antd";
 const FormItem = Form.Item;
 
-function hasErrors(fieldsError) {
+const hasErrors = (fieldsError) => {
   return _.keys(fieldsError).some(field => fieldsError[field]);
 }
 
 class GameInitial extends React.Component {
-  propTypes: {
-    onWordsEntered: React.PropTypes.func.isRequired
-  }
 
   constructor(props) {
     super(props);
