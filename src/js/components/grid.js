@@ -11,7 +11,6 @@ export default class Grid extends React.Component {
 
   render() {
     const {isComparing, guessed, selectedCard, word} = this.props;
-    console.log("properties:", isComparing, guessed)
     return (<div className="charCard" onClick={selectedCard}>
       <Flipcard flipped={isComparing || guessed}>
         <div className='front'>

@@ -43,7 +43,6 @@ export default class GameIndex extends React.Component {
   }
 
   backMainBoard = () => {
-    console.log("here!");
     this.setState({word: undefined, userName: undefined, selectScoreBoard: false});
   }
 
